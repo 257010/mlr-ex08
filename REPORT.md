@@ -94,6 +94,14 @@ The maximum difference between the compared logits was approximately 9.1 × 10�
 confirms that the export preserved the computations of the model with a very small numerical
 deviation.
 
+I also tried this exported model outside the notebook. The course provides a public camera test
+into which you can load your own ONNX model; I loaded `leaf_model_task4.onnx` there and used it
+on the phone with leaves of all four classes, two samples per class. All eight predictions were
+correct and the probability of the right class was between 90 % and 98 % every time. Eight
+photographs are a demonstration, not a measurement — the number I rely on stays the accuracy of
+0.831 on the 248-image camera-like set — but the test shows that the exported file, its
+preprocessing and the order of the classes are correct in a different program as well.
+
 ## 6. Limitations and reliability of the results
 
 The training and validation sets are rather small. The camera-like set was created by
