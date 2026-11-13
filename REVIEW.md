@@ -47,6 +47,26 @@ settings correspond to the data in `model_info.json` and to the preprocessing us
 data were prepared in the notebook. The input in the application is therefore processed in the
 same way as during the training of the model.
 
+The exact places in `index.html` are these two functions, next to each other near the end of
+the file:
+
+- **`preprocessToImageData()` (lines 2524 – 2541)** — cropping and resizing. It takes the
+  central square of the frame (`side = Math.min(srcW, srcH)`, centred by the offsets `sx` and
+  `sy`) and reduces it to `INFO.input_size` × `INFO.input_size`, i.e. 96 × 96. The reduction
+  happens in steps of at most one half at a time, so that a large camera frame is not aliased
+  by a single jump, and the last step draws the 96 × 96 result into the small preview box —
+  what you see in that box is exactly the image the model receives.
+- **`imageDataToTensor()` (lines 2543 – 2554)** — scaling, standardising and the layout of the
+  tensor. It reads the pixel data, divides each channel by 255, then computes
+  `(x − INFO.mean[c]) / INFO.std[c]` for red, green and blue, writes the three channels one
+  after another into a `Float32Array` — planar **CHW** order: `t[i]` is red, `t[n + i]` green,
+  `t[2 * n + i]` blue — and returns `ort.Tensor("float32", t, [1, 3, S, S])`, the shape
+  1 × 3 × 96 × 96 that the model expects.
+
+Both functions take their numbers from `INFO`, which is the fetched `model_info.json` (loaded at
+start-up, with an embedded fallback holding the same values), so the values used in the code
+cannot drift away from the metadata of the model.
+
 ## 4. Privacy and image transfer
 
 During the testing I checked how the application works. The classification itself runs directly

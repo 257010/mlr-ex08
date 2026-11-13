@@ -109,6 +109,28 @@ clear evidence of an improvement. The most convincing is the difference between 
 LeafNet and the frozen pretrained MobileNetV3 Small, which showed up on both the validation and
 the camera-like set.
 
+Two measurements of the variability tell me how small is too small. The first one is the size
+of the sets themselves: the validation set has 62 images, so
+**one single image is worth 1.61 percentage points** of accuracy, and the camera-like set has
+248 images, where one image is worth 0.40 points. A difference of one or two images is therefore
+not yet a difference at all, which is also why every row of the table carries the spread over
+the seeds next to the mean.
+
+The second measurement comes from repeating the whole set of experiments. The sequence was
+measured twice from the beginning, with the same seeds, the same training and validation images
+and the same camera-like set. The means of the rows then moved between the two measurements by
+**0.5 percentage points in the median** on both sets; the largest move was **8.6 points** on the
+validation set and 5.5 points on the camera-like set, and both belonged to the same row, the
+dropout with probability 0.5, which fell from 0.667 to 0.581. Three of the fourteen compared
+rows came back identical on both sets and they are exactly the three rows with the frozen
+MobileNet backbone (6a, 6c, 7b).
+
+I read the table with these numbers in mind. The rows whose difference against the row they are
+compared with is about one point or less — colour jitter, AdamW, label smoothing and the cosine
+schedule — are within this variability, and I call them no difference. The improvement of the
+frozen MobileNet over the baseline, +19 points of validation and +43 points of camera-like
+accuracy, is by an order of magnitude larger than the variability of a repeated measurement.
+
 ## 7. Conclusion
 
 The experiments showed that with a small set of images it is advantageous to use a pretrained
